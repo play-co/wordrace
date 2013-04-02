@@ -6,6 +6,7 @@ DELIM = ":";
 exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
+		// start button
 		this.startBtn = new TextView({
 			superview: this,
 			layout: 'box',
@@ -14,12 +15,18 @@ exports = Class(GC.Application, function () {
 			size: 50
 		});
 		this.startBtn.on('InputStart', bind(this, 'connect'));
+
+		/*
+		 * game stuff
+		 */
 		this.game = new View({
 			superview: this,
 			layout: 'box',
 			canHandleEvents: false,
 			visible: false
 		});
+
+		// letters to choose from
 		this.letters = [];
 		var i, x = 0, w = device.width / 7;
 		var letterBox = bind(this, function(num) {
@@ -40,6 +47,8 @@ exports = Class(GC.Application, function () {
 		for (i = 0; i < 7; i++) {
 			this.letters.push(letterBox(i));
 		}
+
+		// word being built
 		this.word = new TextView({
 			superview: this.game,
 			layout: 'box',
@@ -50,6 +59,8 @@ exports = Class(GC.Application, function () {
 			size: 50
 		});
 		this.word.on('InputStart', bind(this, 'submit'));
+
+		// buttons
 		this.resetBtn = new TextView({
 			superview: this.game,
 			layout: 'box',
@@ -74,10 +85,30 @@ exports = Class(GC.Application, function () {
 			size: 50
 		});
 		this.skipBtn.on('InputStart', bind(this, 'skip'));
+
+		// log view
+		this.logView = new TextView({
+			superview: this.game,
+			layout: 'box',
+			backgroundColor: 'white',
+			color: 'black',
+			height: w,
+			width: w * 3,
+			centerX: true,
+			centerY: true,
+			wrap: true,
+			size: 50
+		});
+	};
+
+	this.log = function(data) {
+		data = data.replace(/<b>/g, '').replace(/<\/b>/g, '');
+		logger.log(data);
+		this.logView.setText(data);
 	};
 
 	this.send = function(data) {
-		logger.log('sending:', data);
+		this.log('sending:', data);
 		this.sock.send(data + DELIM);
 	};
 
@@ -109,7 +140,7 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.connect = function() {
-		logger.log("connect");
+		this.log("connect");
 		import gc.native.socketTransport as socketTransport;
 		this.sock = new socketTransport.Socket('10.1.0.17', 9999);
 		this.sock.reader.setMode('json');
@@ -123,25 +154,24 @@ exports = Class(GC.Application, function () {
 	 * socket event callbacks
 	 */
 	this.onError = function() {
-		logger.log("error");
+		this.log("error");
 	};
 
 	this.onClose = function() {
-		logger.log("close");
+		this.log("close");
 	};
 
 	this.onConnect = function() {
-		logger.log("connect");
+		this.log("connected");
 		this.send('player' + ~~(Math.random() * 1000));
 	};
 
 	// event router
 	this.onRead = function(data) {
-		logger.log("read:", data);
         switch(data[0]) {
             case "SCORE": this.score(data[1]); break;
             case "WORD": this.newLetters(data[1]); break;
-            case "ALERT": this.alert(data[1]); break;
+            case "ALERT": this.log(data[1]); break;
             case "JOIN": this.join(data[1]); break;
             case "LEAVE": this.leave(data[1]); break;
             case "WELCOME": this.welcome(data[1]); break;
@@ -159,24 +189,20 @@ exports = Class(GC.Application, function () {
 		}
 	};
 
-	this.alert = function(data) {
-		logger.log(data);
-	};
-
 	this.score = function(data) {
-		this.alert(data[0] + " has " + data[1] + " points!");
+		this.log(data[0] + " has " + data[1] + " points!");
 	};
 
 	this.join = function(data) {
-		this.alert(data[0] + " joined!");
+		this.log(data[0] + " joined!");
 	};
 
 	this.leave = function(data) {
-		this.alert(data + " left!");
+		this.log(data + " left!");
 	};
 
 	this.welcome = function(data) {
-		logger.log('welcome:', data);
+		this.log('welcome:', data);
 		this.newLetters(data[0]);
 	};
 
