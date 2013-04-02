@@ -48,18 +48,6 @@ exports = Class(GC.Application, function () {
 			this.letters.push(letterBox(i));
 		}
 
-		// word being built
-		this.word = new TextView({
-			superview: this.game,
-			layout: 'box',
-			backgroundColor: 'pink',
-			text: '',
-			height: w,
-			bottom: 0,
-			size: 50
-		});
-		this.word.on('InputStart', bind(this, 'submit'));
-
 		// skip (new letters)
 		this.skipBtn = new TextView({
 			superview: this.game,
@@ -68,11 +56,39 @@ exports = Class(GC.Application, function () {
 			text: 'SKIP',
 			height: w,
 			width: w * 2,
-			right: 0,
-			centerY: true,
+			left: 0,
+			bottom: 0,
 			size: 50
 		});
 		this.skipBtn.on('InputStart', bind(this, 'skip'));
+
+		// word being built
+		this.word = new TextView({
+			superview: this.game,
+			layout: 'box',
+			backgroundColor: 'pink',
+			text: '',
+			height: w,
+			width: w * 3,
+			bottom: 0,
+			centerX: true,
+			size: 50
+		});
+		this.word.on('InputStart', bind(this, 'submit'));
+
+		// cancel word in progress
+		this.cancelBtn = new TextView({
+			superview: this.game,
+			layout: 'box',
+			backgroundColor: 'blue',
+			text: 'CANCEL',
+			height: w,
+			width: w * 2,
+			right: 0,
+			bottom: 0,
+			size: 50
+		});
+		this.cancelBtn.on('InputStart', bind(this, 'cancel'));
 
 		// log view
 		this.logView = new TextView({
@@ -81,10 +97,7 @@ exports = Class(GC.Application, function () {
 			backgroundColor: 'white',
 			color: 'black',
 			height: w,
-			width: w * 5,
-			left: 0,
 			centerY: true,
-			wrap: true,
 			size: 50
 		});
 	};
@@ -96,7 +109,7 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.send = function(data) {
-		this.log('sending:', data);
+		this.log('sending: ' + data);
 		this.sock.send(data + DELIM);
 	};
 
@@ -107,14 +120,18 @@ exports = Class(GC.Application, function () {
 		this.send("!");
 	};
 
+	this.cancel = function() {
+		for (var i = 0; i < 7; i++) {
+			this.letters[i].setText(this.letters[i].__letter);
+		}
+		this.word.setText("");
+	};
+
 	this.submit = function() {
 		var w = this.word.getText();
 		if (w.length > 2) {
-			for (var i = 0; i < 7; i++) {
-				this.letters[i].setText(this.letters[i].__letter);
-			}
+			this.cancel();
 			this.send(w);
-			this.word.setText("");
 		}
 	};
 
@@ -186,7 +203,7 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.welcome = function(data) {
-		this.log('welcome:', data);
+		this.log('welcome: ' + data);
 		this.newLetters(data[0]);
 	};
 
