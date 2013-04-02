@@ -60,19 +60,7 @@ exports = Class(GC.Application, function () {
 		});
 		this.word.on('InputStart', bind(this, 'submit'));
 
-		// buttons
-		this.resetBtn = new TextView({
-			superview: this.game,
-			layout: 'box',
-			backgroundColor: 'blue',
-			text: 'RESET',
-			height: w,
-			width: w * 2,
-			left: 0,
-			centerY: true,
-			size: 50
-		});
-		this.resetBtn.on('InputStart', bind(this, 'reset'));
+		// skip (new letters)
 		this.skipBtn = new TextView({
 			superview: this.game,
 			layout: 'box',
@@ -93,8 +81,8 @@ exports = Class(GC.Application, function () {
 			backgroundColor: 'white',
 			color: 'black',
 			height: w,
-			width: w * 3,
-			centerX: true,
+			width: w * 5,
+			left: 0,
 			centerY: true,
 			wrap: true,
 			size: 50
@@ -115,10 +103,6 @@ exports = Class(GC.Application, function () {
 	/*
 	 * input event callbacks
 	 */
-	this.reset = function() {
-		this.send("?");
-	};
-
 	this.skip = function() {
 		this.send("!");
 	};
