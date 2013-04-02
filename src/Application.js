@@ -38,9 +38,7 @@ exports = Class(GC.Application, function () {
 				height: w - 10,
 				size: 50
 			});
-			tv.on('InputStart', bind(this, function() {
-				this.tapLetter(num);
-			}));
+			tv.on('InputStart', bind(this, 'tapLetter', num));
 			return tv;
 		});
 		for (var i = 0; i < 7; i++) {
@@ -102,6 +100,7 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.log = function(data) {
+		// strip out HTML tags sent by server expecting web client endpoint
 		data = data.replace(/<b>/g, '').replace(/<\/b>/g, '');
 		logger.log(data);
 		this.logView.setText(data);
