@@ -27,7 +27,7 @@ exports = Class(GC.Application, function () {
 
 		// letters to choose from
 		this.letters = [];
-		var i, x = 0, w = device.width / 7;
+		var w = device.width / 7;
 		var letterBox = bind(this, function(num) {
 			var tv = new TextView({
 				superview: this.game,
@@ -43,7 +43,7 @@ exports = Class(GC.Application, function () {
 			}));
 			return tv;
 		});
-		for (i = 0; i < 7; i++) {
+		for (var i = 0; i < 7; i++) {
 			this.letters.push(letterBox(i));
 		}
 
