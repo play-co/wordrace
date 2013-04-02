@@ -2,7 +2,6 @@ import device;
 import ui.View as View;
 import ui.TextView as TextView;
 
-DELIM = ":";
 exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
@@ -110,7 +109,7 @@ exports = Class(GC.Application, function () {
 
 	this.send = function(data) {
 		this.log('sending: ' + data);
-		this.sock.send(data + DELIM);
+		this.sock.send(data + ":");
 	};
 
 	/*
