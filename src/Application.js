@@ -3,38 +3,6 @@ import ui.View as View;
 import ui.TextView as TextView;
 
 DELIM = ":";
-var JSONReader = function() {
-    var chars = {'[':']','{':'}','"':'"'};
-    var self = this;
-    var cb = null;
-    var unclosed = [];
-    var buff = "";
-    var checked = 0;
-    var separate_events = function() {
-        while (buff.length > checked) {
-            if (unclosed.length > 0 && buff.charAt(checked) == unclosed[unclosed.length-1]) {
-                unclosed.pop();
-            }
-            else if (buff.charAt(checked) in chars) {
-                unclosed.push(chars[buff.charAt(checked)]);
-            }
-            checked += 1;
-            if (buff && unclosed.length == 0) {
-                cb(JSON.parse(buff.slice(0,checked)));
-                buff = buff.slice(checked);
-                checked = 0;
-            }
-        }
-    }
-    self.set_cb = function(func) {
-        cb = func;
-    }
-    self.read = function(data) {
-    	logger.log('received:', data);
-        buff += data.slice(0, -2); // line breaks!
-        separate_events();
-    }
-};
 exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
@@ -142,14 +110,13 @@ exports = Class(GC.Application, function () {
 
 	this.connect = function() {
 		logger.log("connect");
-		this.reader = new JSONReader();
-		this.reader.set_cb(bind(this, 'onRead'));
 		import gc.native.socketTransport as socketTransport;
 		this.sock = new socketTransport.Socket('10.1.0.17', 9999);
+		this.sock.reader.setMode('json');
 		this.sock.onError = bind(this, 'onError');
 		this.sock.onClose = bind(this, 'onClose');
 		this.sock.onConnect = bind(this, 'onConnect');
-		this.sock.onRead = this.reader.read;
+		this.sock.onRead = bind(this, 'onRead');
 	};
 
 	/*

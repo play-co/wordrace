@@ -115,7 +115,7 @@ class RaceConn(object):
     def send(self, msg):
         print "sending:", msg
         if self.active:
-            self.conn.write(msg+"\r\n")
+            self.conn.write(msg)
 
     def remove(self):
         self.active = False
