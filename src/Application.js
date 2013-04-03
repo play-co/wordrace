@@ -25,7 +25,7 @@ exports = Class(GC.Application, function () {
 			visible: false
 		});
 
-		// 7 letters to choose from
+		// TOP ROW: 7 letters to choose from
 		this.letters = [];
 		var w = device.width / 7;
 		var letterBox = bind(this, function(num) {
@@ -45,6 +45,18 @@ exports = Class(GC.Application, function () {
 			this.letters.push(letterBox(i));
 		}
 
+		// MIDDLE ROW: log view
+		this.logView = new TextView({
+			superview: this.game,
+			layout: 'box',
+			backgroundColor: 'white',
+			color: 'black',
+			size: 50,
+			height: w,
+			centerY: true
+		});
+
+		// BOTTOM ROW: 3 buttons
 		// skip (new letters)
 		this.skipBtn = new TextView({
 			superview: this.game,
@@ -59,7 +71,7 @@ exports = Class(GC.Application, function () {
 		});
 		this.skipBtn.on('InputStart', bind(this, 'skip'));
 
-		// word being built
+		// word being built (tap to send)
 		this.word = new TextView({
 			superview: this.game,
 			layout: 'box',
@@ -86,17 +98,6 @@ exports = Class(GC.Application, function () {
 			bottom: 0
 		});
 		this.cancelBtn.on('InputStart', bind(this, 'cancel'));
-
-		// log view
-		this.logView = new TextView({
-			superview: this.game,
-			layout: 'box',
-			backgroundColor: 'white',
-			color: 'black',
-			size: 50,
-			height: w,
-			centerY: true
-		});
 	};
 
 	this.log = function(data) {
@@ -167,15 +168,15 @@ exports = Class(GC.Application, function () {
 
 	// event router
 	this.onRead = function(data) {
-        switch(data[0]) {
-            case "SCORE": this.score(data[1]); break;
-            case "WORD": this.newLetters(data[1]); break;
-            case "ALERT": this.log(data[1]); break;
-            case "JOIN": this.join(data[1]); break;
-            case "LEAVE": this.leave(data[1]); break;
-            case "WELCOME": this.welcome(data[1]); break;
-            case "SIGNEDIN": this.signedin(); break;
-        }
+	    switch(data[0]) {
+	        case "SCORE": this.score(data[1]); break;
+	        case "WORD": this.newLetters(data[1]); break;
+	        case "ALERT": this.log(data[1]); break;
+	        case "JOIN": this.join(data[1]); break;
+	        case "LEAVE": this.leave(data[1]); break;
+	        case "WELCOME": this.welcome(data[1]); break;
+	        case "SIGNEDIN": this.signedin(); break;
+	    }
 	};
 
 	/*
