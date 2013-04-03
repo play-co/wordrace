@@ -142,7 +142,7 @@ exports = Class(GC.Application, function () {
 	this.connect = function() {
 		this.log("connect");
 		import gc.native.socketTransport as socketTransport;
-		this.sock = new socketTransport.Socket('10.1.0.17', 9999);
+		this.sock = new socketTransport.Socket('mariobalibrera.com', 9999);
 		this.sock.reader.setMode('json');
 		this.sock.onError = bind(this, 'onError');
 		this.sock.onClose = bind(this, 'onClose');
