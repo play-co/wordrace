@@ -9,8 +9,8 @@ exports = Class(GC.Application, function () {
 		this.startBtn = new TextView({
 			superview: this,
 			layout: 'box',
-			text: 'start',
 			color: 'white',
+			text: 'start',
 			size: 50
 		});
 		this.startBtn.on('InputStart', bind(this, 'connect'));
@@ -25,18 +25,18 @@ exports = Class(GC.Application, function () {
 			visible: false
 		});
 
-		// letters to choose from
+		// 7 letters to choose from
 		this.letters = [];
 		var w = device.width / 7;
 		var letterBox = bind(this, function(num) {
 			var tv = new TextView({
 				superview: this.game,
 				backgroundColor: 'red',
+				size: 50,
 				x: 5 + num * w,
 				y: 5,
 				width: w - 10,
-				height: w - 10,
-				size: 50
+				height: w - 10
 			});
 			tv.on('InputStart', bind(this, 'tapLetter', num));
 			return tv;
@@ -51,11 +51,11 @@ exports = Class(GC.Application, function () {
 			layout: 'box',
 			backgroundColor: 'green',
 			text: 'SKIP',
+			size: 50,
 			height: w,
 			width: w * 2,
 			left: 0,
-			bottom: 0,
-			size: 50
+			bottom: 0
 		});
 		this.skipBtn.on('InputStart', bind(this, 'skip'));
 
@@ -65,11 +65,11 @@ exports = Class(GC.Application, function () {
 			layout: 'box',
 			backgroundColor: 'pink',
 			text: '',
+			size: 50,
 			height: w,
 			width: w * 3,
 			bottom: 0,
-			centerX: true,
-			size: 50
+			centerX: true
 		});
 		this.word.on('InputStart', bind(this, 'submit'));
 
@@ -79,11 +79,11 @@ exports = Class(GC.Application, function () {
 			layout: 'box',
 			backgroundColor: 'blue',
 			text: 'CANCEL',
+			size: 50,
 			height: w,
 			width: w * 2,
 			right: 0,
-			bottom: 0,
-			size: 50
+			bottom: 0
 		});
 		this.cancelBtn.on('InputStart', bind(this, 'cancel'));
 
@@ -93,9 +93,9 @@ exports = Class(GC.Application, function () {
 			layout: 'box',
 			backgroundColor: 'white',
 			color: 'black',
+			size: 50,
 			height: w,
-			centerY: true,
-			size: 50
+			centerY: true
 		});
 	};
 
