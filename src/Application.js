@@ -153,8 +153,8 @@ exports = Class(GC.Application, function () {
 	/*
 	 * socket event callbacks
 	 */
-	this.onError = function() {
-		this.log("error");
+	this.onError = function(e) {
+		this.log("error: " + e);
 	};
 
 	this.onClose = function() {
