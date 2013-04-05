@@ -85,19 +85,19 @@ exports = Class(GC.Application, function () {
 		});
 		this.word.on('InputStart', bind(this, 'submit'));
 
-		// cancel word in progress
-		this.cancelBtn = new TextView({
+		// clear word in progress
+		this.clearBtn = new TextView({
 			superview: this.game,
 			layout: 'box',
 			backgroundColor: 'blue',
-			text: 'CANCEL',
+			text: 'CLEAR',
 			size: 50,
 			height: w,
 			width: w * 2,
 			right: 0,
 			bottom: 0
 		});
-		this.cancelBtn.on('InputStart', bind(this, 'cancel'));
+		this.clearBtn.on('InputStart', bind(this, 'clear'));
 	};
 
 	this.log = function(data) {
@@ -119,7 +119,7 @@ exports = Class(GC.Application, function () {
 		this.send("!");
 	};
 
-	this.cancel = function() {
+	this.clear = function() {
 		for (var i = 0; i < 7; i++) {
 			this.letters[i].setText(this.letters[i].__letter);
 		}
@@ -129,7 +129,7 @@ exports = Class(GC.Application, function () {
 	this.submit = function() {
 		var w = this.word.getText();
 		if (w.length > 2) {
-			this.cancel();
+			this.clear();
 			this.send(w);
 		}
 	};
